@@ -9,119 +9,80 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f5f5f5;
         }
         .container {
             max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 25px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        h1, h2 {
-            color: #0056b3;
+        h1 {
+            color: #333;
             text-align: center;
-            margin-bottom: 20px;
+        }
+        .points-summary {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 4px;
         }
         .chore-section {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-        }
-        .chore-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+            margin: 20px 0;
         }
         .chore-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px dashed #eee;
-        }
-        .chore-item:last-child {
-            border-bottom: none;
-        }
-        .chore-info {
-            flex-grow: 1;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #fff;
         }
         .chore-name {
             font-weight: bold;
             font-size: 1.1em;
-            color: #444;
+            color: #2196F3;
         }
         .chore-details {
-            font-size: 0.9em;
-            color: #777;
-            margin-top: 2px;
+            margin: 10px 0;
+            color: #666;
         }
         .chore-status {
-            margin-left: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-text {
             padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.85em;
-            white-space: nowrap; /* Keep status on one line */
+            border-radius: 3px;
+            font-size: 0.9em;
         }
-        .status-DONE {
-            background-color: #d4edda;
-            color: #155724;
+        .status-done {
+            background-color: #c8e6c9;
+            color: #2e7d32;
         }
-        .status-PENDING {
-            background-color: #fff3cd;
-            color: #856404;
+        .status-pending {
+            background-color: #ffecb3;
+            color: #f57f17;
         }
-        .status-Not-Recurring {
-            background-color: #e2e3e5;
-            color: #6c757d;
-        }
-        .complete-button {
-            background-color: #28a745;
+        .mark-done-btn {
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 8px 16px;
+            border-radius: 4px;
             cursor: pointer;
-            text-decoration: none;
             font-size: 0.9em;
-            transition: background-color 0.2s;
-            margin-left: 10px;
         }
-        .complete-button:hover {
-            background-color: #218838;
+        .mark-done-btn:hover {
+            background-color: #45a049;
         }
-        .points-summary {
-            text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #e0f2f7;
-            border-radius: 8px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #0056b3;
-        }
-        /* Style for mobile view */
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-            .chore-item {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 12px 0;
-            }
-            .chore-status {
-                margin-top: 8px;
-                margin-left: 0;
-            }
-            .complete-button {
-                width: 100%;
-                margin-top: 10px;
-                margin-left: 0;
-            }
+        .mark-done-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -140,12 +101,15 @@
                 <div class="chore-info">
                     <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
                     <div class="chore-details">{{ chore.instructions }}</div>
-                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                    <div class="chore-status">
+                        <span class="status-text {% if chore.status == 'DONE' %}status-done{% else %}status-pending{% endif %}">
+                            Status: {{ chore.status }}
+                        </span>
+                        {% if chore.status != 'DONE' %}
+                        <button onclick="markChoreComplete('{{ chore.name }}')" class="mark-done-btn">Mark Done</button>
+                        {% endif %}
+                    </div>
                 </div>
-                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
-                {% if chore.display_status == 'PENDING' %}
-                    <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -157,12 +121,15 @@
                 <div class="chore-info">
                     <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
                     <div class="chore-details">{{ chore.instructions }}</div>
-                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                    <div class="chore-status">
+                        <span class="status-text {% if chore.status == 'DONE' %}status-done{% else %}status-pending{% endif %}">
+                            Status: {{ chore.status }}
+                        </span>
+                        {% if chore.status != 'DONE' %}
+                        <button onclick="markChoreComplete('{{ chore.name }}')" class="mark-done-btn">Mark Done</button>
+                        {% endif %}
+                    </div>
                 </div>
-                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
-                {% if chore.display_status == 'PENDING' %}
-                    <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -174,12 +141,15 @@
                 <div class="chore-info">
                     <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
                     <div class="chore-details">{{ chore.instructions }}</div>
-                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                    <div class="chore-status">
+                        <span class="status-text {% if chore.status == 'DONE' %}status-done{% else %}status-pending{% endif %}">
+                            Status: {{ chore.status }}
+                        </span>
+                        {% if chore.status != 'DONE' %}
+                        <button onclick="markChoreComplete('{{ chore.name }}')" class="mark-done-btn">Mark Done</button>
+                        {% endif %}
+                    </div>
                 </div>
-                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
-                {% if chore.display_status == 'PENDING' %}
-                    <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -191,13 +161,26 @@
                 <div class="chore-info">
                     <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
                     <div class="chore-details">{{ chore.instructions }}</div>
-                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                    <div class="chore-status">
+                        <span class="status-text {% if chore.status == 'DONE' %}status-done{% else %}status-pending{% endif %}">
+                            Status: {{ chore.status }}
+                        </span>
+                        {% if chore.status != 'DONE' %}
+                        <button onclick="markChoreComplete('{{ chore.name }}')" class="mark-done-btn">Mark Done</button>
+                        {% endif %}
+                    </div>
                 </div>
-                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
-                <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
             </div>
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        function markChoreComplete(choreName) {
+            // Properly encode the chore name for the URL
+            const encodedName = encodeURIComponent(choreName);
+            window.location.href = `/complete/${encodedName}`;
+        }
+    </script>
 </body>
 </html>
