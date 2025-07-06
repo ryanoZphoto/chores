@@ -106,7 +106,7 @@
                             Status: {{ chore.status }}
                         </span>
                         {% if chore.status != 'DONE' %}
-                        <button onclick="markChoreComplete('{{ chore.name }}')" class="mark-done-btn">Mark Done</button>
+                        <a href="/complete/{{ chore.url_name }}" class="mark-done-btn">Mark Done</a>
                         {% endif %}
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                             Status: {{ chore.status }}
                         </span>
                         {% if chore.status != 'DONE' %}
-                        <button onclick="markChoreComplete('{{ chore.name }}')" class="mark-done-btn">Mark Done</button>
+                        <a href="/complete/{{ chore.url_name }}" class="mark-done-btn">Mark Done</a>
                         {% endif %}
                     </div>
                 </div>

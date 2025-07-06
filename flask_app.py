@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for
-from urllib.parse import unquote_plus
+from urllib.parse import unquote_plus, quote_plus
 
 app = Flask(__name__)
 
@@ -126,26 +126,27 @@ def index():
                            ad_hoc_chores=ad_hoc_chores,
                            points_earned=points_earned)
 
-@app.route('/complete/<chore_name>')
+@app.route('/complete/<path:chore_name>')
 def complete_chore(chore_name):
     # Decode the URL-encoded chore name
     decoded_chore_name = unquote_plus(chore_name)
+    print(f"Attempting to complete chore: {decoded_chore_name}")
+    
     chores = load_chores()
     today = datetime.now().date()
-
+    
     for chore in chores:
         if chore['name'] == decoded_chore_name:
-            # Prevent marking complete if already done for the current period
             current_status = get_chore_status(chore)
             if current_status == "DONE":
                 print(f"Chore '{decoded_chore_name}' is already done for its current period.")
-                # Flash a message or handle in UI if you want more feedback
             else:
-                chore['last_completed'] = datetime.now()
+                chore['last_completed'] = today.strftime('%Y-%m-%d')
                 save_chores(chores)
                 print(f"Chore '{decoded_chore_name}' marked complete!")
             break
-    return redirect(url_for('index')) # Redirect back to the main page
+    
+    return redirect(url_for('index'))
 
 # To run this directly without `flask run`:
 if __name__ == '__main__':
