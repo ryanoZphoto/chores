@@ -1,0 +1,98 @@
+[
+    {
+        "name": "Make Bed",
+        "value": 10,
+        "frequency": "daily",
+        "last_completed": "2025-07-05T13:47:21.006837"
+    },
+    {
+        "name": "Tidy Room (Clothes/Desk)",
+        "value": 15,
+        "frequency": "daily",
+        "last_completed": null
+    },
+    {
+        "name": "Load/Unload Dishwasher",
+        "value": 20,
+        "frequency": "daily",
+        "last_completed": null
+    },
+    {
+        "name": "Take Out Kitchen Trash",
+        "value": 5,
+        "frequency": "daily",
+        "last_completed": null
+    },
+    {
+        "name": "Clean His Bathroom (Toilet, Sink, Mirror)",
+        "value": 50,
+        "frequency": "weekly",
+        "last_completed": "2025-07-05T13:47:29.336103"
+    },
+    {
+        "name": "Vacuum Living Room",
+        "value": 40,
+        "frequency": "weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Wipe Down Kitchen Counters/Stovetop",
+        "value": 25,
+        "frequency": "weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Sort & Fold Own Laundry",
+        "value": 30,
+        "frequency": "weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Sweep/Blow Front/Back Patios",
+        "value": 35,
+        "frequency": "bi-weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Weed Small Front Garden Bed",
+        "value": 60,
+        "frequency": "bi-weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Deep Clean Shower",
+        "value": 75,
+        "frequency": "bi-weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Empty All House Trash Bins",
+        "value": 30,
+        "frequency": "bi-weekly",
+        "last_completed": null
+    },
+    {
+        "name": "Mow Front Lawn",
+        "value": 100,
+        "frequency": "monthly_or_ad_hoc",
+        "last_completed": null
+    },
+    {
+        "name": "Wash Car (Exterior)",
+        "value": 80,
+        "frequency": "monthly_or_ad_hoc",
+        "last_completed": null
+    },
+    {
+        "name": "Clean Out Refrigerator (Shelves)",
+        "value": 90,
+        "frequency": "monthly_or_ad_hoc",
+        "last_completed": null
+    },
+    {
+        "name": "Clean Garage (Sweep/Organize Area)",
+        "value": 120,
+        "frequency": "monthly_or_ad_hoc",
+        "last_completed": null
+    }
+]

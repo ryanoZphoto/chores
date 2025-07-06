@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chore Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chore-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .chore-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .chore-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .chore-item:last-child {
+            border-bottom: none;
+        }
+        .chore-info {
+            flex-grow: 1;
+        }
+        .chore-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #444;
+        }
+        .chore-details {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 2px;
+        }
+        .chore-status {
+            margin-left: 15px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.85em;
+            white-space: nowrap; /* Keep status on one line */
+        }
+        .status-DONE {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-PENDING {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-Not-Recurring {
+            background-color: #e2e3e5;
+            color: #6c757d;
+        }
+        .complete-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+            margin-left: 10px;
+        }
+        .complete-button:hover {
+            background-color: #218838;
+        }
+        .points-summary {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e0f2f7;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        /* Style for mobile view */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .chore-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px 0;
+            }
+            .chore-status {
+                margin-top: 8px;
+                margin-left: 0;
+            }
+            .complete-button {
+                width: 100%;
+                margin-top: 10px;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Family Chore Chart</h1>
+
+        <div class="points-summary">
+            Points Earned This Period: {{ points_earned }}
+        </div>
+
+        <div class="chore-section">
+            <h2>Daily Chores</h2>
+            {% for chore in daily_chores %}
+            <div class="chore-item">
+                <div class="chore-info">
+                    <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
+                    <div class="chore-details">{{ chore.instructions }}</div>
+                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                </div>
+                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
+                {% if chore.display_status == 'PENDING' %}
+                    <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="chore-section">
+            <h2>Weekly Chores</h2>
+            {% for chore in weekly_chores %}
+            <div class="chore-item">
+                <div class="chore-info">
+                    <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
+                    <div class="chore-details">{{ chore.instructions }}</div>
+                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                </div>
+                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
+                {% if chore.display_status == 'PENDING' %}
+                    <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="chore-section">
+            <h2>Bi-Weekly Chores</h2>
+            {% for chore in bi_weekly_chores %}
+            <div class="chore-item">
+                <div class="chore-info">
+                    <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
+                    <div class="chore-details">{{ chore.instructions }}</div>
+                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                </div>
+                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
+                {% if chore.display_status == 'PENDING' %}
+                    <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="chore-section">
+            <h2>Monthly / Ad-Hoc Chores</h2>
+            {% for chore in ad_hoc_chores %}
+            <div class="chore-item">
+                <div class="chore-info">
+                    <div class="chore-name">{{ chore.name }} ({{ chore.value }} pts)</div>
+                    <div class="chore-details">{{ chore.instructions }}</div>
+                    <div class="chore-details">Last Completed: {{ chore.display_last_completed }}</div>
+                </div>
+                <span class="chore-status status-{{ chore.display_status.replace(' ', '-') }}">{{ chore.display_status }}</span>
+                <a href="{{ url_for('complete_chore', chore_name=chore.name|urlencode) }}" class="complete-button">Mark Done</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
